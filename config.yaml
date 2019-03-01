@@ -1,0 +1,42 @@
+witnesses:
+ - in.abit
+ - fox
+ - bhuz
+ - clockwork
+
+assets:
+ - CNY
+
+features:
+
+ - description: "Require reliability during block production"
+   block_production:
+     max_misses: 2
+   interval: 60s
+   weight: 1
+
+ - description: "Require reliability with CNY MCR"
+   interval: 60s
+   feed_mcr:
+     assets:
+      - CNY
+     max: 175
+     min: 175
+   weight: 1
+
+ - description: "Require reliability with CNY MSSR"
+   interval: 60s
+   feed_mssr:
+     assets:
+      - CNY
+     max: 115
+     min: 102
+   weight: 1
+
+ - description: "Require reliability feed publishing"
+   interval: 60s
+   feed_age:
+     assets:
+      - CNY
+     max: 1d
+   weight: 1
