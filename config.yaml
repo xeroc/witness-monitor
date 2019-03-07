@@ -1,8 +1,8 @@
 witnesses:
  - in.abit
  - fox
- - bhuz
- - clockwork
+   # - bhuz
+   #- clockwork
 
 assets:
  - CNY
@@ -38,8 +38,8 @@ features:
    feed_age:
      assets:
       - CNY
-     max: 1d
-   weight: 1
+     max: 1m
+   weight: 3
 
  - description: "Feed price"
    interval: 60s
@@ -47,8 +47,8 @@ features:
      assets:
       - CNY
      diff_percentage:
-       max: 2
-   weight: 1
+       max: 0.1
+   weight: 2
 
 actions:
  disapprove:
