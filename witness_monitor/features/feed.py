@@ -36,9 +36,9 @@ class Feed_mcr(FeedParameter):
         mcr = float(feed["maintenance_collateral_ratio"] / 10)
 
         if mcr > _max or mcr < _min:
-            self.failure(witness, min=_min, max=_max, value=mcr)
+            self.failure(witness, error=dict(min=_min, max=_max, value=mcr))
         else:
-            self.success(witness, min=_min, max=_max, value=mcr)
+            self.success(witness)
 
 
 class Feed_mssr(FeedParameter):
@@ -55,9 +55,9 @@ class Feed_mssr(FeedParameter):
         mssr = float(feed["maximum_short_squeeze_ratio"] / 10)
 
         if mssr > _max or mssr < _min:
-            self.failure(witness, min=_min, max=_max, value=mssr)
+            self.failure(witness, error=dict(min=_min, max=_max, value=mssr))
         else:
-            self.success(witness, min=_min, max=_max, value=mssr)
+            self.success(witness)
 
 
 class Feed_age(FeedParameter):
@@ -71,9 +71,9 @@ class Feed_age(FeedParameter):
         d = convert_to_timedelta(self.params.get("max", self.default_max_age))
 
         if now - d > date:
-            self.failure(witness, age=(now - date).seconds)
+            self.failure(witness, error=dict(age=(now - date).seconds))
         else:
-            self.success(witness, age=(now - date).seconds)
+            self.success(witness)
 
 
 class Feed_price(FeedParameter):
@@ -94,7 +94,7 @@ class Feed_price(FeedParameter):
             max = float(param.get("max"))
             if max:
                 if max < diff_percentage(p, pw):
-                    self.failure(witness, diff_percentage=diff_percentage(p, pw))
+                    self.failure(witness, error=dict(diff=diff_percentage(p, pw)))
 
         if not self.failed:
             self.success(witness)

@@ -49,3 +49,7 @@ features:
      diff_percentage:
        max: 2
    weight: 1
+
+actions:
+ disapprove:
+  threshold: 2

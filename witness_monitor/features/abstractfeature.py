@@ -70,6 +70,7 @@ class Feature(metaclass=AutoRegister):
                 "witness": witness,
                 "tag": self.__tag__,
                 "description": self.feature.get("description"),
+                "weight": float(self.feature.get("weight", 1)),
                 **kwargs,
             }
         )

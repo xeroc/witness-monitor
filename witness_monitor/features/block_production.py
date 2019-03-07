@@ -26,7 +26,10 @@ class Block_production(Feature):
         if cached:
             difference = missed - cached
             if difference > self.params.get("max_misses", 5):
-                self.failure(witness, total_missed=missed, since_last_check=difference)
+                self.failure(
+                    witness,
+                    error=dict(total_missed=missed, since_last_check=difference),
+                )
             else:
                 self.success(witness, total_missed=missed, since_last_check=difference)
         self.to_cache(witness, "total_missed", missed)
