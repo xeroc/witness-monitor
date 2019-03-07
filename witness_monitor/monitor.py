@@ -12,7 +12,7 @@ class Monitor:
 
     def _loadchaindata(self):
         for symbol in self.config.get("assets"):
-            asset = Asset(symbol)
+            asset = Asset(symbol, full=True)
             self.data["asset"][symbol] = asset
             self.data["feed"][symbol] = asset.feeds
         for witness_name in self.config.get("witnesses"):

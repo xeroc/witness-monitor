@@ -1,7 +1,8 @@
+import math
 from ..utils import convert_to_timedelta
 from .abstractfeature import Feature
 from datetime import datetime, timedelta
-from bitshares.price import PriceFeed
+from bitshares.price import PriceFeed, Price
 
 
 class FeedParameter(Feature):
@@ -73,3 +74,27 @@ class Feed_age(FeedParameter):
             self.failure(witness, age=(now - date).seconds)
         else:
             self.success(witness, age=(now - date).seconds)
+
+
+class Feed_price(FeedParameter):
+    __tag__ = "feed_settlementprice"
+
+    default_max_age = "1d"
+
+    def test_feed(self, witness, symbol, feed):
+        current_feed = self.data["asset"][symbol]["bitasset_data"]["current_feed"]
+        pw = feed["settlement_price"]
+        p = Price(current_feed["settlement_price"])
+
+        def diff_percentage(p, pw):
+            return math.fabs((float(pw) - float(p)) / float(p) * 100)
+
+        param = self.params.get("diff_percentage")
+        if param:
+            max = float(param.get("max"))
+            if max:
+                if max < diff_percentage(p, pw):
+                    self.failure(witness, diff_percentage=diff_percentage(p, pw))
+
+        if not self.failed:
+            self.success(witness)

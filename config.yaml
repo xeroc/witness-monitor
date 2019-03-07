@@ -40,3 +40,12 @@ features:
       - CNY
      max: 1d
    weight: 1
+
+ - description: "Feed price"
+   interval: 60s
+   feed_settlementprice:
+     assets:
+      - CNY
+     diff_percentage:
+       max: 2
+   weight: 1

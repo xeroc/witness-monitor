@@ -19,6 +19,7 @@ class Feature(metaclass=AutoRegister):
         self.config = config
         self.data = data
         self.feature = feature
+        self.failed = False
 
     @property
     def params(self):
@@ -52,6 +53,7 @@ class Feature(metaclass=AutoRegister):
         raise NotImplementedError("{}.test()".format(self.__class__.__name__))
 
     def success(self, witness, **kwargs):
+        self.failed = False
         self.successes.append(
             {
                 "witness": witness,
@@ -62,6 +64,7 @@ class Feature(metaclass=AutoRegister):
         )
 
     def failure(self, witness, **kwargs):
+        self.failed = True
         self.failures.append(
             {
                 "witness": witness,
