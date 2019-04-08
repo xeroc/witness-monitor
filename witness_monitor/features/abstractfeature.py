@@ -1,13 +1,5 @@
 from ..storage import Cache
-
-
-class AutoRegister(type):
-    def __new__(mcs, name, bases, classdict):
-        new_cls = type.__new__(mcs, name, bases, classdict)
-        for b in bases:
-            if hasattr(b, "register_subclass"):
-                b.register_subclass(new_cls)
-        return new_cls
+from ..utils import AutoRegister
 
 
 class Feature(metaclass=AutoRegister):
@@ -20,6 +12,8 @@ class Feature(metaclass=AutoRegister):
         self.data = data
         self.feature = feature
         self.failed = False
+        self.on_success = dict()
+        self.on_failure = dict()
 
     @property
     def params(self):
@@ -54,23 +48,25 @@ class Feature(metaclass=AutoRegister):
 
     def success(self, witness, **kwargs):
         self.failed = False
-        self.successes.append(
-            {
-                "witness": witness,
-                "tag": self.__tag__,
-                "description": self.feature.get("description"),
-                **kwargs,
-            }
-        )
+        data = {
+            "witness": witness,
+            "tag": self.__tag__,
+            "description": self.feature.get("description"),
+            "actions": self.feature.get("on_success"),
+            **kwargs,
+        }
+        self.successes.append(data)
+        self.on_success[witness] = data
 
     def failure(self, witness, **kwargs):
         self.failed = True
-        self.failures.append(
-            {
-                "witness": witness,
-                "tag": self.__tag__,
-                "description": self.feature.get("description"),
-                "weight": float(self.feature.get("weight", 1)),
-                **kwargs,
-            }
-        )
+        data = {
+            "witness": witness,
+            "tag": self.__tag__,
+            "description": self.feature.get("description"),
+            "weight": float(self.feature.get("weight", 1)),
+            "actions": self.feature.get("on_failure"),
+            **kwargs,
+        }
+        self.failures.append(data)
+        self.on_failure[witness] = data

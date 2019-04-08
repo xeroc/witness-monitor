@@ -12,44 +12,65 @@ features:
  - description: "Require reliability during block production"
    block_production:
      max_misses: 2
-   interval: 60s
-   weight: 1
+   on_failure:
+    - disapprove_witness
+    - log
+    - jekyll
+   on_success: []
 
  - description: "Require reliability with CNY MCR"
-   interval: 60s
    feed_mcr:
      assets:
       - CNY
      max: 175
      min: 175
-   weight: 1
+   on_failure:
+    - disapprove_witness
+    - log
+    - jekyll
+   on_success: []
 
  - description: "Require reliability with CNY MSSR"
-   interval: 60s
    feed_mssr:
      assets:
       - CNY
      max: 115
      min: 102
-   weight: 1
+   on_failure:
+    - disapprove_witness
+    - log
+    - jekyll
+   on_success: []
 
  - description: "Require reliability feed publishing"
-   interval: 60s
    feed_age:
      assets:
       - CNY
      max: 1m
-   weight: 3
+   on_failure:
+    - disapprove_witness
+    - log
+    - jekyll
+   on_success: []
 
  - description: "Feed price"
-   interval: 60s
    feed_settlementprice:
      assets:
       - CNY
      diff_percentage:
-       max: 0.1
-   weight: 2
+       max: 1.5
+   on_failure:
+    - disapprove_witness
+    - log
+    - jekyll
+   on_success: []
 
 actions:
- disapprove:
-  threshold: 2
+ disapprove_witness:
+  description: Disapprove failing witnesses
+  account: xeroc
+ log:
+  description: Log Actions
+  account: xeroc
+ jekyll:
+  dest: ../proxy.xeroc.org/_log

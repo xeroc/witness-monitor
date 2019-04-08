@@ -9,7 +9,7 @@ class ConfigClass(dict):
     def load_yaml(self, *args):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         o = open(os.path.join(dir_path, *args))
-        d = yaml.load(o.read())
+        d = yaml.load(o.read(), Loader=yaml.SafeLoader)
         self.update(d)
 
 

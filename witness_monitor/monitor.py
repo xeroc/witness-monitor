@@ -1,6 +1,7 @@
 from bitshares.asset import Asset
 from bitshares.witness import Witness
 from .features import Feature
+from .actions import Action
 from .storage import Base, engine
 
 
@@ -20,6 +21,9 @@ class Monitor:
             self.data["witness"][witness_name] = witness
             self.data["account"][witness_name] = witness.account
 
+    """ Tests
+    """
+
     def test(self, features=[]):
         if not features:
             features = self.config.get("features")
@@ -34,6 +38,30 @@ class Monitor:
                 k = klass(feature=feature, config=self.config, data=self.data)
                 for witness in self.config.get("witnesses"):
                     k.test(witness)
+
+    """ Actions
+    """
+
+    def action(self):
+        results = list()
+        for success in Feature.get_successes():
+            results.append(success)
+
+        for failure in Feature.get_failures():
+            results.append(failure)
+
+        for result in results:
+            witness = result["witness"]
+            actions = result["actions"]
+            if not actions:
+                continue
+
+            for action in actions:
+                klass = Action.get_class(action)
+                if not klass:
+                    continue
+                k = klass(action=action, config=self.config, result=result)
+                k.fire(witness)
 
 
 Base.metadata.create_all(engine)

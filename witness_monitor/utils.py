@@ -1,6 +1,15 @@
 from datetime import timedelta
 
 
+class AutoRegister(type):
+    def __new__(mcs, name, bases, classdict):
+        new_cls = type.__new__(mcs, name, bases, classdict)
+        for b in bases:
+            if hasattr(b, "register_subclass"):
+                b.register_subclass(new_cls)
+        return new_cls
+
+
 def convert_to_timedelta(time_val):
     """
     Given a *time_val* (string) such as '5d', returns a timedelta object
