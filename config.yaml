@@ -1,9 +1,4 @@
-witnesses:
- - in.abit
- - fox
-   # - bhuz
-   #- clockwork
-
+voter: xeroc
 assets:
  - CNY
 
@@ -68,9 +63,7 @@ features:
 actions:
  disapprove_witness:
   description: Disapprove failing witnesses
-  account: xeroc
  log:
   description: Log Actions
-  account: xeroc
  jekyll:
   dest: ../proxy.xeroc.org/_log

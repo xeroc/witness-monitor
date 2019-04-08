@@ -8,5 +8,5 @@ class DisapproveWitness(Action):
 
     def fire(self, witness):
         bitshares = shared_blockchain_instance()
-        account = self.params.get("account", None)
+        account = self.config.get("voter")
         bitshares.disapprovewitness(witness, account=account)

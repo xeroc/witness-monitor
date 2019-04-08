@@ -7,7 +7,7 @@ class Log(Action):
     __tag__ = "log"
 
     def fire(self, witness):
-        account = self.params.get("account", None)
+        account = self.config.get("voter", None)
         click.echo(
             click.style(
                 "Disapproving witness {} from {}: {}".format(

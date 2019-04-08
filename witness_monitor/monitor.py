@@ -1,3 +1,4 @@
+from bitshares.account import Account
 from bitshares.asset import Asset
 from bitshares.witness import Witness
 from .features import Feature
@@ -16,10 +17,23 @@ class Monitor:
             asset = Asset(symbol, full=True)
             self.data["asset"][symbol] = asset
             self.data["feed"][symbol] = asset.feeds
-        for witness_name in self.config.get("witnesses"):
+        for witness_name in self.witnesses:
             witness = Witness(witness_name)
             self.data["witness"][witness_name] = witness
             self.data["account"][witness_name] = witness.account
+
+    @property
+    def witnesses(self):
+        voter = self.config.get("voter")
+        if not voter:
+            return []
+        witnesses = list()
+        account = Account(voter, full=True)
+        for vote in account["votes"]:
+            if "witness_account" not in vote:
+                continue
+            witnesses.append(Account(vote["witness_account"])["name"])
+        return witnesses
 
     """ Tests
     """
@@ -36,7 +50,7 @@ class Monitor:
             klass = Feature.get_class(key)
             if klass:
                 k = klass(feature=feature, config=self.config, data=self.data)
-                for witness in self.config.get("witnesses"):
+                for witness in self.witnesses:
                     k.test(witness)
 
     """ Actions
